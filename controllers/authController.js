@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
+const TOKEN_EXPIRES = '7d';
+
 const register = async (req, res) => {
   try {
     const { login, password, fullName, phone, email } = req.body;
@@ -37,7 +39,7 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ login, password: hashedPassword, fullName, phone, email });
 
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: TOKEN_EXPIRES });
 
     res.status(201).json({
       token,
@@ -67,7 +69,7 @@ const login = async (req, res) => {
       return res.status(401).json({ field: 'password', message: 'Неверный пароль' });
     }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: TOKEN_EXPIRES });
 
     res.json({
       token,
