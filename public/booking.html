@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конференции.РФ — Оформление заявки</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/dashboard.html" class="navbar-brand">
+      <div class="brand-icon"><i class="bi bi-building"></i></div>
+      <span>Конференции.РФ</span>
+    </a>
+    <div class="navbar-right">
+      <div class="user-badge">
+        <i class="bi bi-person-circle"></i>
+        <span id="userName"></span>
+      </div>
+      <a href="/dashboard.html" class="btn btn-outline btn-sm">
+        <i class="bi bi-arrow-left"></i> Кабинет
+      </a>
+      <button id="logoutBtn" class="btn btn-outline btn-sm">
+        <i class="bi bi-box-arrow-right"></i> Выйти
+      </button>
+    </div>
+  </nav>
+
+  <div class="container page-content">
+    <div class="booking-form-card">
+      <div style="margin-bottom:1.75rem">
+        <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:.35rem">
+          <i class="bi bi-calendar-plus" style="color:var(--primary)"></i> Оформление заявки
+        </h2>
+        <p class="text-muted">Заполните форму — заявка поступит администратору на рассмотрение</p>
+      </div>
+
+      <form id="bookingForm" class="card" novalidate>
+        <div class="card-body">
+
+          <!-- Выбор помещения -->
+          <div class="form-group">
+            <label class="form-label" for="roomId">
+              <i class="bi bi-building"></i> Помещение <span style="color:var(--danger)">*</span>
+            </label>
+            <select id="roomId" class="form-control">
+              <option value="">— Выберите помещение —</option>
+            </select>
+          </div>
+
+          <!-- Превью помещения -->
+          <div id="roomPreview" class="hidden" style="margin-bottom:1.25rem;border-radius:var(--radius);overflow:hidden;border:2px solid var(--primary-light)">
+            <img id="previewImg" src="" alt="" style="width:100%;height:180px;object-fit:cover">
+            <div style="padding:1rem">
+              <h4 id="previewName" style="font-size:1rem;font-weight:600;margin-bottom:.25rem"></h4>
+              <p id="previewDesc" class="text-muted" style="font-size:.85rem;margin-bottom:.5rem"></p>
+              <div class="d-flex gap-2" style="font-size:.85rem">
+                <span><i class="bi bi-people" style="color:var(--primary)"></i> <span id="previewCapacity"></span></span>
+                <span><i class="bi bi-cash" style="color:var(--success)"></i> <span id="previewPrice"></span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Дата -->
+          <div class="form-group">
+            <label class="form-label" for="conferenceDate">
+              <i class="bi bi-calendar3"></i> Дата конференции <span style="color:var(--danger)">*</span>
+            </label>
+            <input type="date" id="conferenceDate" class="form-control">
+            <div id="dateDisplay" style="font-size:.8rem;color:var(--text-muted);margin-top:.35rem"></div>
+          </div>
+
+          <!-- Способ оплаты -->
+          <div class="form-group">
+            <label class="form-label" for="paymentMethod">
+              <i class="bi bi-credit-card"></i> Способ оплаты <span style="color:var(--danger)">*</span>
+            </label>
+            <select id="paymentMethod" class="form-control">
+              <option value="">— Выберите способ оплаты —</option>
+              <option value="Наличные">Наличные</option>
+              <option value="Банковская карта">Банковская карта</option>
+              <option value="Безналичный расчёт">Безналичный расчёт</option>
+            </select>
+          </div>
+
+          <!-- Примечания -->
+          <div class="form-group">
+            <label class="form-label" for="notes">
+              <i class="bi bi-chat-left-text"></i> Примечания <span class="text-muted" style="font-size:.8rem">(необязательно)</span>
+            </label>
+            <textarea id="notes" class="form-control" rows="3"
+              placeholder="Укажите дополнительные пожелания или требования..."
+              style="resize:vertical"></textarea>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            После подачи заявка будет рассмотрена администратором. Статус можно отслеживать в личном кабинете.
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn btn-primary btn-block">
+            <i class="bi bi-send"></i> Подать заявку
+          </button>
+        </div>
+      </form>
+
+      <!-- Блок успеха -->
+      <div id="successBlock" class="hidden card">
+        <div class="card-body" style="text-align:center;padding:3rem 2rem">
+          <div style="font-size:4.5rem;color:var(--success);margin-bottom:1rem">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <h2 style="margin-bottom:.5rem">Заявка подана!</h2>
+          <p class="text-muted" style="margin-bottom:1.5rem">
+            Вы забронировали <strong id="successRoom"></strong> на <strong id="successDate"></strong>.
+            Администратор рассмотрит вашу заявку в ближайшее время.
+          </p>
+          <div class="d-flex gap-2" style="justify-content:center;flex-wrap:wrap">
+            <a href="/dashboard.html" class="btn btn-primary">
+              <i class="bi bi-list-check"></i> Мои заявки
+            </a>
+            <a href="/booking.html" class="btn btn-outline" onclick="location.reload()">
+              <i class="bi bi-plus-circle"></i> Ещё заявка
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/booking.js"></script>
+</body>
+</html>

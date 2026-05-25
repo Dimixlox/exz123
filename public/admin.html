@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конференции.РФ — Панель администратора</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/admin.html" class="navbar-brand">
+      <div class="brand-icon"><i class="bi bi-building"></i></div>
+      <span>Конференции.РФ</span>
+    </a>
+    <div class="navbar-right">
+      <div class="user-badge" style="background:#fef3c7;color:#d97706">
+        <i class="bi bi-shield-check"></i>
+        <span>Администратор</span>
+      </div>
+      <button id="logoutBtn" class="btn btn-outline btn-sm">
+        <i class="bi bi-box-arrow-right"></i> Выйти
+      </button>
+    </div>
+  </nav>
+
+  <div class="container page-content">
+
+    <div style="margin-bottom:1.75rem">
+      <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:.25rem">
+        <i class="bi bi-speedometer2" style="color:var(--primary)"></i> Панель управления
+      </h2>
+      <p class="text-muted">Управление заявками на бронирование помещений</p>
+    </div>
+
+    <!-- Статистика -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="bi bi-collection"></i></div>
+        <div class="stat-info">
+          <h3 id="statTotal">—</h3>
+          <p>Всего заявок</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon yellow"><i class="bi bi-clock"></i></div>
+        <div class="stat-info">
+          <h3 id="statNew">—</h3>
+          <p>Новые</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon indigo"><i class="bi bi-calendar-check"></i></div>
+        <div class="stat-info">
+          <h3 id="statScheduled">—</h3>
+          <p>Назначено</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="bi bi-check2-all"></i></div>
+        <div class="stat-info">
+          <h3 id="statCompleted">—</h3>
+          <p>Завершено</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Таблица заявок -->
+    <div class="table-wrapper">
+
+      <!-- Фильтры -->
+      <div class="filters-bar">
+        <div class="filter-group">
+          <label><i class="bi bi-funnel"></i> Статус:</label>
+          <select id="filterStatus">
+            <option value="">Все статусы</option>
+            <option value="Новая">Новая</option>
+            <option value="Мероприятие назначено">Мероприятие назначено</option>
+            <option value="Мероприятие завершено">Мероприятие завершено</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label><i class="bi bi-building"></i> Помещение:</label>
+          <select id="filterRoom">
+            <option value="">Все помещения</option>
+          </select>
+        </div>
+        <button id="resetFilters" class="btn btn-outline btn-sm">
+          <i class="bi bi-x-circle"></i> Сбросить
+        </button>
+        <div style="margin-left:auto;font-size:.875rem;color:var(--text-muted)">
+          Всего: <strong id="totalCount">0</strong> заявок
+        </div>
+      </div>
+
+      <!-- Таблица -->
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th data-sort="id">
+                № <i class="sort-icon bi bi-arrow-down-up"></i>
+              </th>
+              <th>Пользователь</th>
+              <th>Помещение</th>
+              <th data-sort="conferenceDate">
+                Дата <i class="sort-icon bi bi-arrow-down-up"></i>
+              </th>
+              <th>Оплата</th>
+              <th data-sort="status">
+                Статус <i class="sort-icon bi bi-arrow-down-up"></i>
+              </th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsTbody">
+            <tr>
+              <td colspan="7" class="text-center" style="padding:2rem">
+                <span class="spinner dark"></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Пагинация -->
+      <div id="pagination" class="pagination"></div>
+    </div>
+  </div>
+
+  <!-- Модальное окно смены статуса -->
+  <div id="statusModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3><i class="bi bi-arrow-repeat" style="color:var(--primary)"></i> Изменить статус</h3>
+        <button id="closeStatusModal" class="modal-close"><i class="bi bi-x-lg"></i></button>
+      </div>
+
+      <p style="color:var(--text-muted);margin-bottom:1rem">
+        Подтвердите смену статуса заявки:
+      </p>
+
+      <div style="text-align:center;padding:.75rem;background:var(--bg);border-radius:var(--radius-sm)">
+        <div id="newStatusLabel" style="font-size:1rem"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="cancelStatusBtn" class="btn btn-outline">Отмена</button>
+        <button id="confirmStatusBtn" class="btn btn-primary">
+          <i class="bi bi-check-lg"></i> Подтвердить
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>
