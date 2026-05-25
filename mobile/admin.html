@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конференции.РФ — Администратор</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+
+    .phone { width: 390px; height: 844px; background: #f0f4ff; border-radius: 48px; box-shadow: 0 40px 100px rgba(0,0,0,0.5), inset 0 0 0 2px #444; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+
+    .status-bar { background: #1e1b4b; padding: 14px 28px 10px; display: flex; justify-content: space-between; flex-shrink: 0; }
+    .status-bar .time { color: white; font-size: 15px; font-weight: 700; }
+    .status-icons { display: flex; gap: 6px; }
+    .status-icons i { color: white; font-size: 13px; }
+
+    .header { background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 60%, #7c3aed 100%); padding: 18px 24px 26px; flex-shrink: 0; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .admin-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); border-radius: 12px; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.25); }
+    .admin-badge i { color: #fbbf24; font-size: 16px; }
+    .admin-badge span { color: white; font-size: 12px; font-weight: 700; }
+    .logout-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-decoration: none; }
+    .logout-btn i { color: white; font-size: 16px; }
+    .header h2 { color: white; font-size: 20px; font-weight: 800; }
+    .header p { color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 3px; }
+
+    /* Статы */
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0; }
+    .stat-card { background: rgba(255,255,255,0.12); border-radius: 16px; padding: 14px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
+    .stat-card .num { color: white; font-size: 26px; font-weight: 800; line-height: 1; }
+    .stat-card .lbl { color: rgba(255,255,255,0.7); font-size: 11px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+    .stat-card .lbl i { font-size: 12px; }
+
+    .content { flex: 1; overflow-y: auto; padding: 16px 16px 80px; }
+    .content::-webkit-scrollbar { display: none; }
+
+    /* Фильтры */
+    .filters { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter-chip { padding: 7px 14px; border-radius: 20px; border: 2px solid #e2e8f0; background: white; font-size: 12px; font-weight: 600; color: #64748b; white-space: nowrap; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+    .filter-chip.active { background: #4c1d95; border-color: #4c1d95; color: white; }
+
+    /* Заявки */
+    .booking-card { background: white; border-radius: 18px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-left: 4px solid #e2e8f0; animation: slideUp 0.3s ease; }
+    .booking-card.new { border-left-color: #f59e0b; }
+    .booking-card.scheduled { border-left-color: #3b82f6; }
+    .booking-card.done { border-left-color: #10b981; }
+
+    @keyframes slideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .card-top h4 { font-size: 14px; font-weight: 700; color: #1e293b; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+    .badge.new { background: #fef3c7; color: #d97706; }
+    .badge.scheduled { background: #dbeafe; color: #2563eb; }
+    .badge.done { background: #d1fae5; color: #059669; }
+
+    .card-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .meta-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #64748b; }
+    .meta-item i { font-size: 12px; }
+
+    .card-actions { display: flex; gap: 8px; }
+    .action-btn { flex: 1; padding: 9px 8px; border-radius: 12px; border: none; font-size: 11px; font-weight: 700; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s; }
+    .action-btn:active { transform: scale(0.97); }
+    .action-btn.schedule { background: #eff6ff; color: #2563eb; }
+    .action-btn.complete { background: #f0fdf4; color: #059669; }
+    .action-btn.reset { background: #fefce8; color: #d97706; }
+
+    /* Нижний бар */
+    .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; height: 76px; background: white; border-top: 1px solid #e2e8f0; display: flex; align-items: center; border-radius: 0 0 48px 48px; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); padding: 0 30px; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 8px 0; text-decoration: none; }
+    .nav-item i { font-size: 22px; color: #94a3b8; }
+    .nav-item span { font-size: 10px; font-weight: 600; color: #94a3b8; }
+    .nav-item.active i { color: #7c3aed; }
+    .nav-item.active span { color: #7c3aed; }
+
+    /* Тост */
+    .toast { position: absolute; top: 140px; left: 16px; right: 16px; background: #1e293b; color: white; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.25); z-index: 100; animation: toastIn 0.3s ease; }
+    .toast i { color: #10b981; font-size: 20px; }
+    .toast p { font-size: 13px; font-weight: 600; }
+    .toast span { font-size: 11px; opacity: 0.7; display: block; margin-top: 2px; }
+    @keyframes toastIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="status-icons"><i class="bi bi-wifi"></i><i class="bi bi-reception-4"></i><i class="bi bi-battery-full"></i></div>
+    </div>
+
+    <div class="header">
+      <div class="header-top">
+        <div class="admin-badge">
+          <i class="bi bi-shield-fill-check"></i>
+          <span>Администратор</span>
+        </div>
+        <a href="index.html" class="logout-btn"><i class="bi bi-box-arrow-right"></i></a>
+      </div>
+      <h2>Панель управления</h2>
+      <p>Управление заявками на бронирование</p>
+      <div class="stats" style="margin-top:14px">
+        <div class="stat-card">
+          <div class="num">12</div>
+          <div class="lbl"><i class="bi bi-collection"></i> Всего заявок</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">4</div>
+          <div class="lbl"><i class="bi bi-clock"></i> Новых</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">5</div>
+          <div class="lbl"><i class="bi bi-calendar-check"></i> Назначено</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">3</div>
+          <div class="lbl"><i class="bi bi-check2-all"></i> Завершено</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Тост-уведомление -->
+    <div class="toast">
+      <i class="bi bi-check-circle-fill"></i>
+      <div>
+        <p>Статус изменён!</p>
+        <span>Заявка #5 → Мероприятие назначено</span>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Фильтры -->
+      <div class="filters">
+        <div class="filter-chip active">Все</div>
+        <div class="filter-chip">Новые</div>
+        <div class="filter-chip">Назначено</div>
+        <div class="filter-chip">Завершено</div>
+      </div>
+
+      <!-- Заявки -->
+      <div class="booking-card new">
+        <div class="card-top">
+          <h4>Аудитория №1</h4>
+          <span class="badge new">Новая</span>
+        </div>
+        <div class="card-meta">
+          <div class="meta-item"><i class="bi bi-person"></i> Иванов И.И.</div>
+          <div class="meta-item"><i class="bi bi-calendar3"></i> 15.06.2026</div>
+          <div class="meta-item"><i class="bi bi-credit-card"></i> Карта</div>
+        </div>
+        <div class="card-actions">
+          <button class="action-btn schedule"><i class="bi bi-calendar-check"></i> Назначить</button>
+          <button class="action-btn complete"><i class="bi bi-check2-all"></i> Завершить</button>
+        </div>
+      </div>
+
+      <div class="booking-card scheduled">
+        <div class="card-top">
+          <h4>Коворкинг «Инновации»</h4>
+          <span class="badge scheduled">Назначено</span>
+        </div>
+        <div class="card-meta">
+          <div class="meta-item"><i class="bi bi-person"></i> Петров А.С.</div>
+          <div class="meta-item"><i class="bi bi-calendar3"></i> 20.06.2026</div>
+          <div class="meta-item"><i class="bi bi-cash"></i> Наличные</div>
+        </div>
+        <div class="card-actions">
+          <button class="action-btn complete"><i class="bi bi-check2-all"></i> Завершить</button>
+          <button class="action-btn reset"><i class="bi bi-arrow-counterclockwise"></i> Вернуть</button>
+        </div>
+      </div>
+
+      <div class="booking-card done">
+        <div class="card-top">
+          <h4>Кинозал «Панорама»</h4>
+          <span class="badge done">Завершено</span>
+        </div>
+        <div class="card-meta">
+          <div class="meta-item"><i class="bi bi-person"></i> Сидорова М.В.</div>
+          <div class="meta-item"><i class="bi bi-calendar3"></i> 01.05.2026</div>
+          <div class="meta-item"><i class="bi bi-bank"></i> Безналичный</div>
+        </div>
+        <div class="card-actions">
+          <button class="action-btn reset"><i class="bi bi-arrow-counterclockwise"></i> Вернуть в новые</button>
+        </div>
+      </div>
+
+      <div class="booking-card new">
+        <div class="card-top">
+          <h4>Аудитория №1</h4>
+          <span class="badge new">Новая</span>
+        </div>
+        <div class="card-meta">
+          <div class="meta-item"><i class="bi bi-person"></i> Козлов Д.Р.</div>
+          <div class="meta-item"><i class="bi bi-calendar3"></i> 25.06.2026</div>
+          <div class="meta-item"><i class="bi bi-credit-card"></i> Карта</div>
+        </div>
+        <div class="card-actions">
+          <button class="action-btn schedule"><i class="bi bi-calendar-check"></i> Назначить</button>
+          <button class="action-btn complete"><i class="bi bi-check2-all"></i> Завершить</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <a href="dashboard.html" class="nav-item">
+        <i class="bi bi-house"></i>
+        <span>Главная</span>
+      </a>
+      <a href="admin.html" class="nav-item active">
+        <i class="bi bi-shield-fill-check"></i>
+        <span>Управление</span>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

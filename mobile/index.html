@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конференции.РФ — Вход</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: #f5f7ff;
+      border-radius: 48px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.5), inset 0 0 0 2px #444;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Статус-бар */
+    .status-bar {
+      background: #1e3a8a;
+      padding: 14px 28px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .status-bar .time { color: white; font-size: 15px; font-weight: 700; }
+    .status-icons { display: flex; gap: 6px; align-items: center; }
+    .status-icons i { color: white; font-size: 13px; }
+
+    /* Контент */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .content::-webkit-scrollbar { display: none; }
+
+    /* Герой */
+    .hero {
+      background: linear-gradient(160deg, #1e3a8a 0%, #3b82f6 60%, #60a5fa 100%);
+      padding: 40px 28px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 250px; height: 250px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50%;
+      top: -80px; right: -60px;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 180px; height: 180px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+      bottom: -50px; left: -40px;
+    }
+
+    .logo-wrap {
+      width: 76px; height: 76px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .logo-wrap i { font-size: 36px; color: white; }
+    .hero h1 { color: white; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+    .hero p { color: rgba(255,255,255,0.8); font-size: 13px; margin-top: 6px; }
+
+    /* Форма */
+    .form-area {
+      background: white;
+      flex: 1;
+      border-radius: 32px 32px 0 0;
+      margin-top: -24px;
+      padding: 32px 24px 24px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.08);
+    }
+
+    .form-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: #1e293b; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      background: #f1f5f9;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      overflow: hidden;
+    }
+    .input-wrap:focus-within { background: white; border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59,130,246,0.1); }
+    .input-wrap i { padding: 14px 14px 14px 16px; color: #94a3b8; font-size: 18px; }
+    .input-wrap input { flex: 1; border: none; background: transparent; padding: 14px 16px 14px 0; font-size: 15px; font-family: inherit; color: #1e293b; outline: none; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+
+    .footer-text { text-align: center; font-size: 14px; color: #64748b; }
+    .footer-text a { color: #2563eb; font-weight: 600; text-decoration: none; }
+
+    .error-msg {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #dc2626;
+      font-size: 13px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="status-icons">
+        <i class="bi bi-wifi"></i>
+        <i class="bi bi-reception-4"></i>
+        <i class="bi bi-battery-full"></i>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="hero">
+        <div class="logo-wrap"><i class="bi bi-building"></i></div>
+        <h1>Конференции.РФ</h1>
+        <p>Портал бронирования помещений</p>
+      </div>
+
+      <div class="form-area">
+        <div class="form-title">Добро пожаловать 👋</div>
+
+        <div class="error-msg" style="display:none">
+          <i class="bi bi-exclamation-circle"></i>
+          <span>Неверный логин или пароль</span>
+        </div>
+
+        <div class="field">
+          <label>Логин</label>
+          <div class="input-wrap">
+            <i class="bi bi-person"></i>
+            <input type="text" placeholder="Введите логин">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Пароль</label>
+          <div class="input-wrap">
+            <i class="bi bi-lock"></i>
+            <input type="password" placeholder="••••••••">
+          </div>
+        </div>
+
+        <button class="btn-primary">
+          <i class="bi bi-box-arrow-in-right"></i> Войти
+        </button>
+
+        <div class="divider">или</div>
+
+        <div class="footer-text">
+          Ещё не зарегистрированы?<br>
+          <a href="register.html">Создать аккаунт</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
